@@ -81,5 +81,39 @@ public class MeteoDAO {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public int getUmiditaGiornaliera(int mese, int giorno, String localita) {
+		
+		final String sql = "SELECT umidita " + 
+				"FROM situazione " + 
+				"WHERE MONTH(DATA) = ? AND DAY(DATA)=? AND localita = ?" ;
+		
+		int res = 0;
+		
+		try {
+			Connection conn = DBConnect.getInstance().getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+
+			st.setInt(1, mese);
+			st.setInt(2, giorno);
+			st.setString(3, localita);
+
+
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				res = rs.getInt("umidita");
+			}
+
+			conn.close();
+			return res;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+	}
 
 }
